@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-server-mlops-inspector"
+version = "0.1.0"
+description = "MCP Server for Model Context Protocol to inspect MLOps metrics, drift, and control routing."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Rizwan Kashif"}
+]
+dependencies = [
+    "mcp>=1.1.2",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "pandas>=2.0.0"
+]
+
+[project.scripts]
+mcp-server-mlops-inspector = "mcp_server_mlops_inspector.server:main"

@@ -40,6 +40,22 @@ This repository is designed to showcase production-ready MLOps observability int
 
 ---
 
+## Use Cases & Target Workflows
+
+By acting as the interactive agentic layer over your MLOps telemetry, this server supports both technical engineering tasks and non-technical business workflows.
+
+### 1. For Technical Teams (SRE, MLOps, & Data Scientists)
+* **On-Call Copilot & Troubleshooting:** When system alerts fire, the agent automatically retrieves performance metrics, checks distribution drift, isolates the failing component, and recommends routing overrides.
+* **Conversational Registry Queries:** Instantly inspect model versions, routing metrics, and costs via natural language (e.g., *"Which models in Staging have been inactive for 48 hours?"*).
+* **Automated Shadow Testing:** The agent can be instructed to dynamically adjust routing weights to direct test traffic to staging versions, monitor error rates in real-time, and auto-rollback if anomalies occur.
+
+### 2. For Non-Technical Users (Product Managers & Operations)
+* **Slack / MS Teams ChatOps Integration:** Business stakeholders can ask standard chat channels simple questions (e.g., *"Is the churn predictor running fine?"*) and receive natural language status summaries with one-click **[Approve Rollback]** action buttons.
+* **Embedded Dashboard Sidebars:** Power custom "AI Support" chat sidebars inside your internal MLOps web dashboard UI, allowing users to ask questions directly next to the charts.
+* **Hands-free Autopilot Resolutions:** The server powers background automation that detects errors, performs the diagnostic checks, updates routing weights to a healthy version, and pings the team with a simple summary: *"CLV model v2 degraded. Automatically routed traffic to v1 baseline."*
+
+---
+
 ## Installation & Setup
 
 ### Prerequisites

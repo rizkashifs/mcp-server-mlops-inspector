@@ -42,17 +42,53 @@ This repository is designed to showcase production-ready MLOps observability int
 
 ## Use Cases & Target Workflows
 
-By acting as the interactive agentic layer over your MLOps telemetry, this server supports both technical engineering tasks and non-technical business workflows.
+By acting as the interactive agentic layer over your MLOps telemetry, this server transforms passive metrics into an active, self-healing control plane. It supports both deep technical diagnostics and intuitive business-facing workflows.
 
-### 1. For Technical Teams (SRE, MLOps, & Data Scientists)
-* **On-Call Copilot & Troubleshooting:** When system alerts fire, the agent automatically retrieves performance metrics, checks distribution drift, isolates the failing component, and recommends routing overrides.
-* **Conversational Registry Queries:** Instantly inspect model versions, routing metrics, and costs via natural language (e.g., *"Which models in Staging have been inactive for 48 hours?"*).
-* **Automated Shadow Testing:** The agent can be instructed to dynamically adjust routing weights to direct test traffic to staging versions, monitor error rates in real-time, and auto-rollback if anomalies occur.
+### 1. Technical Workflows (SRE, MLOps, & Data Scientists)
 
-### 2. For Non-Technical Users (Product Managers & Operations)
-* **Slack / MS Teams ChatOps Integration:** Business stakeholders can ask standard chat channels simple questions (e.g., *"Is the churn predictor running fine?"*) and receive natural language status summaries with one-click **[Approve Rollback]** action buttons.
-* **Embedded Dashboard Sidebars:** Power custom "AI Support" chat sidebars inside your internal MLOps web dashboard UI, allowing users to ask questions directly next to the charts.
-* **Hands-free Autopilot Resolutions:** The server powers background automation that detects errors, performs the diagnostic checks, updates routing weights to a healthy version, and pings the team with a simple summary: *"CLV model v2 degraded. Automatically routed traffic to v1 baseline."*
+#### 🛠️ On-Call Copilot & Troubleshooting
+Instead of logging in, hunting through metrics, and manually running rollback scripts, the agent serves as an active co-pilot.
+* **How it works:** When a latency or error rate alert is fired, the agent triggers the `diagnose_model_health` prompt workflow. It queries `observability://alerts/active`, fetches real-time operational data, computes feature drift, pinpoints the root cause, and automatically generates mitigation plans.
+
+#### 📊 Conversational Registry & Cost Queries
+Technical users can interact with model registries using natural language, removing the need to navigate complex dashboards or write custom SQL/GraphQL queries.
+* **Example Agent Queries:**
+  * *"Who is our highest-costing model this week and what is its average latency?"*
+  * *"List all models in Staging that have been completely inactive for over 48 hours."*
+* **Under the Hood:** The agent calls `list_deployed_models` and `get_realtime_metrics`, automatically aggregating the logs into clean Markdown reports.
+
+#### 🔀 Automated Chaos Engineering & Shadow Testing
+Safely test staging models under production-like scenarios with automated safety nets.
+* **How it works:** You can ask the agent: *"Direct 10% of traffic to version `v2-beta`, run a load test, and if the error rate spikes above 1%, immediately revert back to `v1`."* The agent uses `modify_routing_weight` to manipulate traffic, monitors the outcomes, and acts as the automated safety switch.
+
+---
+
+### 2. Business & Operational Workflows (Product Managers & Operations)
+
+#### 💬 ChatOps: Slack / MS Teams Integrations
+Brings MLOps out of siloed dashboards and directly into your company's communication hub.
+* **The User Query:** 
+  > *"@MLOpsBot, is the fraud detection model running fine? Customers are complaining about transaction delays."*
+* **The Behind-the-Scenes Action:** The bot parses this query, calls `get_realtime_metrics` and `fetch_drift_analysis` through the MCP server, and discovers a feature drift anomaly.
+* **The Bot Reply:** 
+  > *"The fraud model is online (average latency is normal at 15ms). However, the `transaction_amount` distribution has drifted today (PSI: 0.32). I recommend routing traffic to the stable fallback version. Click below to execute."*
+  > `[ Approve Rollback to v1 ]`  `[ View Detailed Metrics ]`
+
+#### 🧭 Embedded Dashboard Copilot Sidebar
+Add a natural language sidebar widget directly within your internal web application or React dashboard.
+* **The User Query:** *"The customer lifetime value model seems degraded today. What's wrong with it?"*
+* **The Behind-the-Scenes Action:** The UI routes this question to the MCP-backed agent, which inspects the active alerts and feature statistics.
+* **The Copilot Reply:** A conversational, jargon-free summary is rendered directly in the sidebar: *"The CLV model is experiencing a high error rate (8.2%) because the inputs for `user_age` have drifted significantly from the baseline. Staging version `v1` remains unaffected."*
+
+#### 🤖 Hands-Free Autopilot & Self-Healing
+Enable autonomous remediation loops where issues are identified and mitigated before customers experience degradation.
+* **How it works:** The agent runs as a cron or event-triggered worker. When the error rate crosses the threshold:
+  1. It fetches metrics and confirms degradation.
+  2. It identifies if a stable staging/fallback version exists.
+  3. It calls `modify_routing_weight` to dynamically shift traffic to the healthy version.
+  4. It sends an automated email or Slack ping:
+     > 🚨 **Self-Healing Resolution: High Error Rate on CLV Regressor**
+     > * "An error rate spike of 8.2% was detected on version `v2`. The agent checked for data drift, confirmed degradation, and automatically routed 100% of traffic to the stable `v1` version. Service has normalized."
 
 ---
 
